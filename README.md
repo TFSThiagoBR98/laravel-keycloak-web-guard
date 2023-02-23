@@ -39,19 +39,19 @@ Any other version is not guaranteed to work.
 Require the package
 
 ```
-composer require vizir/laravel-keycloak-web-guard
+composer require tfsthiagobr98/laravel-keycloak
 ```
 
 If you want to change routes or the default values for Keycloak, publish the config file:
 
 ```
-php artisan vendor:publish  --provider="Vizir\KeycloakWebGuard\KeycloakWebGuardServiceProvider"
+php artisan vendor:publish --provider="TFSThiagoBR98\LaravelKeycloak\LaravelKeycloakServiceProvider"
 
 ```
 
 ## Configuration
 
-After publishing `config/keycloak-web.php` file, you can change the routes:
+After publishing `config/laravel-keycloak.php` file, you can change the routes:
 
 ```php
 'redirect_url' => '/admin',
@@ -127,7 +127,7 @@ And change your provider config too:
 'providers' => [
     'users' => [
         'driver' => 'keycloak-users',
-        'model' => Vizir\KeycloakWebGuard\Models\KeycloakUser::class,
+        'model' => TFSThiagoBR98\LaravelKeycloak\Models\KeycloakUser::class,
     ],
 
     // ...
@@ -152,7 +152,7 @@ If not provided, resource will be the client_id, which is the regular check if y
 
 ### Keycloak Web Gate
 
-You can use [Laravel Authorization Gate](https://laravel.com/docs/7.x/authorization#gates) to check user against one or more roles (and resources).
+You can use [Laravel Authorization Gate](https://laravel.com/docs/10.x/authorization#gates) to check user against one or more roles (and resources).
 
 For example, in your Controller you can check **one role**:
 
@@ -203,7 +203,7 @@ You can extend it and register your own middleware on Kernel.php or just use `Au
 
 We registered a new user provider that you configured on `config/auth.php` called "keycloak-users".
 
-In this same configuration you setted the model. So you can register your own model extending `Vizir\KeycloakWebGuard\Models\KeycloakUser` class and changing this configuration.
+In this same configuration you setted the model. So you can register your own model extending `TFSThiagoBR98\LaravelKeycloak\Models\KeycloakUser` class and changing this configuration.
 
 You can implement your own [User Provider](https://laravel.com/docs/5.8/authentication#adding-custom-user-providers): just remember to implement the `retrieveByCredentials` method receiving the Keycloak Profile information to retrieve a instance of model.
 

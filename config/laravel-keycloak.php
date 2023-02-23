@@ -47,7 +47,7 @@ return [
     /**
      * Page to redirect after callback if there's no "intent"
      *
-     * @see Vizir\KeycloakWebGuard\Controllers\AuthController::callback()
+     * @see TFSThiagoBR98\LaravelKeycloak\Controllers\AuthController::callback()
      */
     'redirect_url' => '/admin',
 
@@ -58,7 +58,7 @@ return [
      *
      * The routes will receive the name "keycloak.{route}" and login/callback are required.
      * So, if you make it false, you shoul register a named 'keycloak.login' route and extend
-     * the Vizir\KeycloakWebGuard\Controllers\AuthController controller.
+     * the TFSThiagoBR98\LaravelKeycloak\Controllers\AuthController controller.
      */
     'routes' => [
         'login' => 'login',
@@ -68,9 +68,54 @@ return [
     ],
 
     /**
-    * GuzzleHttp Client options
-    *
-    * @link http://docs.guzzlephp.org/en/stable/request-options.html
-    */
-   'guzzle_options' => [],
+     * GuzzleHttp Client options
+     *
+     * @link http://docs.guzzlephp.org/en/stable/request-options.html
+     */
+    'guzzle_options' => [],
+
+    /**
+     * 
+     */
+    'load_user_from_database' => env('KEYCLOAK_LOAD_USER_FROM_DATABASE', true),
+
+    /**
+     * 
+     */
+    'user_provider_custom_retrieve_method' => null,
+
+    /**
+     * 
+     */
+    'user_provider_credential' => env('KEYCLOAK_USER_PROVIDER_CREDENTIAL', 'username'),
+
+    /**
+     * 
+     */
+    'token_principal_attribute' => env('KEYCLOAK_TOKEN_PRINCIPAL_ATTRIBUTE', 'preferred_username'),
+
+    /**
+     * 
+     */
+    'append_decoded_token' => env('KEYCLOAK_APPEND_DECODED_TOKEN', false),
+
+    /**
+     * 
+     */
+    'allowed_resources' => env('KEYCLOAK_ALLOWED_RESOURCES', null),
+
+    /**
+     * 
+     */
+    'ignore_resources_validation' => env('KEYCLOAK_IGNORE_RESOURCES_VALIDATION', false),
+
+    /**
+     * 
+     */
+    'leeway' => env('KEYCLOAK_LEEWAY', 0),
+
+    /**
+     * 
+     */
+    'input_key' => env('KEYCLOAK_TOKEN_INPUT_KEY', null)
 ];

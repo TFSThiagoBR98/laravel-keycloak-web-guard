@@ -1,10 +1,10 @@
 <?php
 
-namespace Vizir\KeycloakWebGuard\Auth;
+namespace TFSThiagoBR98\LaravelKeycloak\Auth;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
-use Vizir\KeycloakWebGuard\Models\KeycloakUser;
+use TFSThiagoBR98\LaravelKeycloak\Models\KeycloakUser;
 
 class KeycloakWebUserProvider implements UserProvider
 {

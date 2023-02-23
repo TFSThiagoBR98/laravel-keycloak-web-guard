@@ -1,18 +1,18 @@
 <?php
 
-namespace Vizir\KeycloakWebGuard\Auth\Guard;
+namespace TFSThiagoBR98\LaravelKeycloak\Auth\Guard;
 
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
-use Vizir\KeycloakWebGuard\Auth\KeycloakAccessToken;
-use Vizir\KeycloakWebGuard\Exceptions\KeycloakCallbackException;
-use Vizir\KeycloakWebGuard\Models\KeycloakUser;
-use Vizir\KeycloakWebGuard\Facades\KeycloakWeb;
+use TFSThiagoBR98\LaravelKeycloak\Auth\KeycloakAccessToken;
+use TFSThiagoBR98\LaravelKeycloak\Exceptions\KeycloakCallbackException;
+use TFSThiagoBR98\LaravelKeycloak\Models\KeycloakUser;
+use TFSThiagoBR98\LaravelKeycloak\Facades\KeycloakWeb;
 use Illuminate\Contracts\Auth\UserProvider;
 
-class KeycloakWebGuard implements Guard
+class KeycloakWebGuard implements StatefulGuard
 {
     /**
      * @var null|Authenticatable|KeycloakUser
@@ -20,8 +20,19 @@ class KeycloakWebGuard implements Guard
     protected $user;
 
     /**
+     * @var UserProvider
+     */
+    protected $provider;
+
+    /**
+     * @var Request
+     */
+    protected $request;
+
+    /**
      * Constructor.
      *
+     * @param UserProvider $provider
      * @param Request $request
      */
     public function __construct(UserProvider $provider, Request $request)
@@ -157,7 +168,7 @@ class KeycloakWebGuard implements Guard
     public function roles($resource = '')
     {
         if (empty($resource)) {
-            $resource = Config::get('keycloak-web.client_id');
+            $resource = Config::get('laravel-keycloak.client_id');
         }
 
         if (! $this->check()) {
@@ -191,5 +202,76 @@ class KeycloakWebGuard implements Guard
     public function hasRole($roles, $resource = '')
     {
         return empty(array_diff((array) $roles, $this->roles($resource)));
+    }
+
+    /**
+     * Attempt to authenticate a user using the given credentials.
+     *
+     * @param  array  $credentials
+     * @param  bool  $remember
+     * @return bool
+     */
+    public function attempt(array $credentials = [], $remember = false) {
+        return false;
+    }
+
+    /**
+     * Log a user into the application without sessions or cookies.
+     *
+     * @param  array  $credentials
+     * @return bool
+     */
+    public function once(array $credentials = []) {
+        return false;
+    }
+
+    /**
+     * Log a user into the application.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  bool  $remember
+     * @return void
+     */
+    public function login(Authenticatable $user, $remember = false) {
+        return false;
+    }
+
+    /**
+     * Log the given user ID into the application.
+     *
+     * @param  mixed  $id
+     * @param  bool  $remember
+     * @return \Illuminate\Contracts\Auth\Authenticatable|bool
+     */
+    public function loginUsingId($id, $remember = false) {
+        return false;
+    }
+
+    /**
+     * Log the given user ID into the application without sessions or cookies.
+     *
+     * @param  mixed  $id
+     * @return \Illuminate\Contracts\Auth\Authenticatable|bool
+     */
+    public function onceUsingId($id) {
+        return false;
+    }
+
+    /**
+     * Determine if the user was authenticated via "remember me" cookie.
+     *
+     * @return bool
+     */
+    public function viaRemember() {
+        return false;
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @return void
+     */
+    public function logout() {
+        KeycloakWeb::forgetToken();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Vizir\KeycloakWebGuard\Auth;
+namespace TFSThiagoBR98\LaravelKeycloak\Auth;
 
 use Exception;
 

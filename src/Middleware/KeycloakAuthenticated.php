@@ -1,6 +1,6 @@
 <?php
 
-namespace Vizir\KeycloakWebGuard\Middleware;
+namespace TFSThiagoBR98\LaravelKeycloak\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate;
 

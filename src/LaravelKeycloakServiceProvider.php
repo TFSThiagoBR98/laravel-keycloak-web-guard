@@ -1,6 +1,6 @@
 <?php
 
-namespace Vizir\KeycloakWebGuard;
+namespace TFSThiagoBR98\LaravelKeycloak;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
@@ -9,15 +9,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-use Vizir\KeycloakWebGuard\Auth\Guard\KeycloakWebGuard;
-use Vizir\KeycloakWebGuard\Auth\KeycloakWebUserProvider;
-use Vizir\KeycloakWebGuard\Middleware\KeycloakAuthenticated;
-use Vizir\KeycloakWebGuard\Middleware\KeycloakCan;
-use Vizir\KeycloakWebGuard\Middleware\KeycloakCanOne;
-use Vizir\KeycloakWebGuard\Models\KeycloakUser;
-use Vizir\KeycloakWebGuard\Services\KeycloakService;
+use TFSThiagoBR98\LaravelKeycloak\Auth\Guard\KeycloakApiGuard;
+use TFSThiagoBR98\LaravelKeycloak\Auth\Guard\KeycloakWebGuard;
+use TFSThiagoBR98\LaravelKeycloak\Auth\KeycloakWebUserProvider;
+use TFSThiagoBR98\LaravelKeycloak\Middleware\KeycloakAuthenticated;
+use TFSThiagoBR98\LaravelKeycloak\Middleware\KeycloakCan;
+use TFSThiagoBR98\LaravelKeycloak\Middleware\KeycloakCanOne;
+use TFSThiagoBR98\LaravelKeycloak\Models\KeycloakUser;
+use TFSThiagoBR98\LaravelKeycloak\Services\KeycloakService;
 
-class KeycloakWebGuardServiceProvider extends ServiceProvider
+class LaravelKeycloakServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap services.
@@ -27,10 +28,10 @@ class KeycloakWebGuardServiceProvider extends ServiceProvider
     public function boot()
     {
         // Configuration
-        $config = __DIR__ . '/../config/keycloak-web.php';
+        $config = __DIR__ . '/../config/laravel-keycloak.php';
 
-        $this->publishes([$config => config_path('keycloak-web.php')], 'config');
-        $this->mergeConfigFrom($config, 'keycloak-web');
+        $this->publishes([$config => $this->app->configPath() . '/laravel-keycloak.php'], 'config');
+        $this->mergeConfigFrom($config, 'laravel-keycloak');
 
         // User Provider
         Auth::provider('keycloak-users', function($app, array $config) {
@@ -54,6 +55,11 @@ class KeycloakWebGuardServiceProvider extends ServiceProvider
         Auth::extend('keycloak-web', function ($app, $name, array $config) {
             $provider = Auth::createUserProvider($config['provider']);
             return new KeycloakWebGuard($provider, $app->request);
+        });
+
+        Auth::extend('keycloak', function ($app, $name, array $config) {
+            $provider = Auth::createUserProvider($config['provider']);
+            return new KeycloakApiGuard($provider, $app->request);
         });
 
         // Facades
@@ -103,19 +109,19 @@ class KeycloakWebGuardServiceProvider extends ServiceProvider
         $router = $this->app->make('router');
 
         if (! empty($routes['login'])) {
-            $router->middleware('web')->get($routes['login'], 'Vizir\KeycloakWebGuard\Controllers\AuthController@login')->name('keycloak.login');
+            $router->middleware('web')->get($routes['login'], 'TFSThiagoBR98\LaravelKeycloak\Controllers\AuthController@login')->name('keycloak.login');
         }
 
         if (! empty($routes['logout'])) {
-            $router->middleware('web')->get($routes['logout'], 'Vizir\KeycloakWebGuard\Controllers\AuthController@logout')->name('keycloak.logout');
+            $router->middleware('web')->get($routes['logout'], 'TFSThiagoBR98\LaravelKeycloak\Controllers\AuthController@logout')->name('keycloak.logout');
         }
 
         if (! empty($routes['register'])) {
-            $router->middleware('web')->get($routes['register'], 'Vizir\KeycloakWebGuard\Controllers\AuthController@register')->name('keycloak.register');
+            $router->middleware('web')->get($routes['register'], 'TFSThiagoBR98\LaravelKeycloak\Controllers\AuthController@register')->name('keycloak.register');
         }
 
         if (! empty($routes['callback'])) {
-            $router->middleware('web')->get($routes['callback'], 'Vizir\KeycloakWebGuard\Controllers\AuthController@callback')->name('keycloak.callback');
+            $router->middleware('web')->get($routes['callback'], 'TFSThiagoBR98\LaravelKeycloak\Controllers\AuthController@callback')->name('keycloak.callback');
         }
     }
 }

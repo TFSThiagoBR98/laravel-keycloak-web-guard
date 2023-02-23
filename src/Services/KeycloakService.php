@@ -1,6 +1,6 @@
 <?php
 
-namespace Vizir\KeycloakWebGuard\Services;
+namespace TFSThiagoBR98\LaravelKeycloak\Services;
 
 use Exception;
 use GuzzleHttp\ClientInterface;
@@ -10,8 +10,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
-use Vizir\KeycloakWebGuard\Auth\KeycloakAccessToken;
-use Vizir\KeycloakWebGuard\Auth\Guard\KeycloakWebGuard;
+use Illuminate\Support\Facades\Session;
+use TFSThiagoBR98\LaravelKeycloak\Auth\KeycloakAccessToken;
+use TFSThiagoBR98\LaravelKeycloak\Auth\Guard\KeycloakWebGuard;
 
 class KeycloakService
 {
@@ -106,23 +107,23 @@ class KeycloakService
     public function __construct(ClientInterface $client)
     {
         if (is_null($this->baseUrl)) {
-            $this->baseUrl = trim(Config::get('keycloak-web.base_url'), '/');
+            $this->baseUrl = trim(Config::get('laravel-keycloak.base_url'), '/');
         }
 
         if (is_null($this->realm)) {
-            $this->realm = Config::get('keycloak-web.realm');
+            $this->realm = Config::get('laravel-keycloak.realm');
         }
 
         if (is_null($this->clientId)) {
-            $this->clientId = Config::get('keycloak-web.client_id');
+            $this->clientId = Config::get('laravel-keycloak.client_id');
         }
 
         if (is_null($this->clientSecret)) {
-            $this->clientSecret = Config::get('keycloak-web.client_secret');
+            $this->clientSecret = Config::get('laravel-keycloak.client_secret');
         }
 
         if (is_null($this->cacheOpenid)) {
-            $this->cacheOpenid = Config::get('keycloak-web.cache_openid', false);
+            $this->cacheOpenid = Config::get('laravel-keycloak.cache_openid', false);
         }
 
         if (is_null($this->callbackUrl)) {
@@ -130,7 +131,7 @@ class KeycloakService
         }
 
         if (is_null($this->redirectLogout)) {
-            $this->redirectLogout = Config::get('keycloak-web.redirect_logout');
+            $this->redirectLogout = Config::get('laravel-keycloak.redirect_logout');
         }
 
         $this->state = $this->generateRandomState();
@@ -358,7 +359,7 @@ class KeycloakService
      */
     public function retrieveToken()
     {
-        return session()->get(self::KEYCLOAK_SESSION);
+        return Session::get(self::KEYCLOAK_SESSION);
     }
 
     /**
@@ -368,8 +369,8 @@ class KeycloakService
      */
     public function saveToken($credentials)
     {
-        session()->put(self::KEYCLOAK_SESSION, $credentials);
-        session()->save();
+        Session::put(self::KEYCLOAK_SESSION, $credentials);
+        Session::save();
     }
 
     /**
@@ -379,8 +380,8 @@ class KeycloakService
      */
     public function forgetToken()
     {
-        session()->forget(self::KEYCLOAK_SESSION);
-        session()->save();
+        Session::forget(self::KEYCLOAK_SESSION);
+        Session::save();
     }
 
     /**
@@ -390,7 +391,7 @@ class KeycloakService
      */
     public function validateState($state)
     {
-        $challenge = session()->get(self::KEYCLOAK_SESSION_STATE);
+        $challenge = Session::get(self::KEYCLOAK_SESSION_STATE);
         return (! empty($state) && ! empty($challenge) && $challenge === $state);
     }
 
@@ -401,8 +402,8 @@ class KeycloakService
      */
     public function saveState()
     {
-        session()->put(self::KEYCLOAK_SESSION_STATE, $this->state);
-        session()->save();
+        Session::put(self::KEYCLOAK_SESSION_STATE, $this->state);
+        Session::save();
     }
 
     /**
@@ -412,8 +413,8 @@ class KeycloakService
      */
     public function forgetState()
     {
-        session()->forget(self::KEYCLOAK_SESSION_STATE);
-        session()->save();
+        Session::forget(self::KEYCLOAK_SESSION_STATE);
+        Session::save();
     }
 
     /**

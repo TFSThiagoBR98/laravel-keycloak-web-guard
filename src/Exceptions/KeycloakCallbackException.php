@@ -1,6 +1,6 @@
 <?php
 
-namespace Vizir\KeycloakWebGuard\Exceptions;
+namespace TFSThiagoBR98\LaravelKeycloak\Exceptions;
 
 class KeycloakCallbackException extends \RuntimeException
 {

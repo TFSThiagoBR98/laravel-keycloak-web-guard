@@ -1,15 +1,15 @@
 <?php
 
-namespace Vizir\KeycloakWebGuard\Facades;
+namespace TFSThiagoBR98\LaravelKeycloak\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static getLoginUrl()
- * @method static getLogoutUrl()
- * @method static getAccessToken(string $code)
- * @method static getUserProfile(array $credentials)
- * @method static forgetToken()
+ * @method static string getLoginUrl()
+ * @method static string getLogoutUrl()
+ * @method static array getAccessToken(string $code)
+ * @method static array getUserProfile(array $credentials)
+ * @method static void forgetToken()
  */
 class KeycloakWeb extends Facade
 {

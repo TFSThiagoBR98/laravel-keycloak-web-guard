@@ -1,6 +1,6 @@
 <?php
 
-namespace Vizir\KeycloakWebGuard\Models;
+namespace TFSThiagoBR98\LaravelKeycloak\Models;
 
 use Auth;
 use Illuminate\Contracts\Auth\Authenticatable;
