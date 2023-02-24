@@ -22,7 +22,7 @@ class AuthController extends Controller
      */
     public function login()
     {
-        return App::instance(LoginResponse::class);
+        return App::make(LoginResponse::class);
     }
 
     /**
@@ -32,7 +32,7 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        return App::instance(LogoutResponse::class);
+        return App::make(LogoutResponse::class);
     }
 
     /**
@@ -42,7 +42,7 @@ class AuthController extends Controller
      */
     public function register()
     {
-        return App::instance(RegisterResponse::class);
+        return App::make(RegisterResponse::class);
     }
 
     /**
