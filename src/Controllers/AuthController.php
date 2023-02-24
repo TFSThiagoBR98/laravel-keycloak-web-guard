@@ -76,7 +76,7 @@ class AuthController extends Controller
             $token = KeycloakWeb::getAccessToken($code);
 
             if (Auth::validate($token)) {
-                $url = App::config('laravel-keycloak.redirect_url', '/admin');
+                $url = config('laravel-keycloak.redirect_url', '/admin');
                 return Redirect::intended($url);
             }
         }
