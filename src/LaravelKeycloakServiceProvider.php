@@ -12,10 +12,16 @@ use Illuminate\Support\ServiceProvider;
 use TFSThiagoBR98\LaravelKeycloak\Auth\Guard\KeycloakApiGuard;
 use TFSThiagoBR98\LaravelKeycloak\Auth\Guard\KeycloakWebGuard;
 use TFSThiagoBR98\LaravelKeycloak\Auth\KeycloakWebUserProvider;
+use TFSThiagoBR98\LaravelKeycloak\Contracts\LoginResponse;
+use TFSThiagoBR98\LaravelKeycloak\Contracts\LogoutResponse;
+use TFSThiagoBR98\LaravelKeycloak\Contracts\RegisterResponse;
 use TFSThiagoBR98\LaravelKeycloak\Middleware\KeycloakAuthenticated;
 use TFSThiagoBR98\LaravelKeycloak\Middleware\KeycloakCan;
 use TFSThiagoBR98\LaravelKeycloak\Middleware\KeycloakCanOne;
 use TFSThiagoBR98\LaravelKeycloak\Models\KeycloakUser;
+use TFSThiagoBR98\LaravelKeycloak\Responses\KeyCloakLoginResponse;
+use TFSThiagoBR98\LaravelKeycloak\Responses\KeyCloakLogoutResponse;
+use TFSThiagoBR98\LaravelKeycloak\Responses\KeyCloakRegisterResponse;
 use TFSThiagoBR98\LaravelKeycloak\Services\KeycloakService;
 
 class LaravelKeycloakServiceProvider extends ServiceProvider
@@ -66,6 +72,10 @@ class LaravelKeycloakServiceProvider extends ServiceProvider
         $this->app->bind('keycloak-web', function($app) {
             return $app->make(KeycloakService::class);
         });
+
+        $this->app->bind(LoginResponse::class, KeyCloakLoginResponse::class);
+        $this->app->bind(LogoutResponse::class, KeyCloakLogoutResponse::class);
+        $this->app->bind(RegisterResponse::class, KeyCloakRegisterResponse::class);
 
         // Routes
         $this->registerRoutes();

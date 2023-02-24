@@ -4,7 +4,12 @@ namespace TFSThiagoBR98\LaravelKeycloak\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use TFSThiagoBR98\LaravelKeycloak\Contracts\LoginResponse;
+use TFSThiagoBR98\LaravelKeycloak\Contracts\LogoutResponse;
+use TFSThiagoBR98\LaravelKeycloak\Contracts\RegisterResponse;
 use TFSThiagoBR98\LaravelKeycloak\Exceptions\KeycloakCallbackException;
 use TFSThiagoBR98\LaravelKeycloak\Facades\KeycloakWeb;
 
@@ -17,10 +22,7 @@ class AuthController extends Controller
      */
     public function login()
     {
-        $url = KeycloakWeb::getLoginUrl();
-        KeycloakWeb::saveState();
-
-        return redirect($url);
+        return App::instance(LoginResponse::class);
     }
 
     /**
@@ -30,9 +32,7 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        $url = KeycloakWeb::getLogoutUrl();
-        KeycloakWeb::forgetToken();
-        return redirect($url);
+        return App::instance(LogoutResponse::class);
     }
 
     /**
@@ -42,8 +42,7 @@ class AuthController extends Controller
      */
     public function register()
     {
-        $url = KeycloakWeb::getRegisterUrl();
-        return redirect($url);
+        return App::instance(RegisterResponse::class);
     }
 
     /**
@@ -77,11 +76,11 @@ class AuthController extends Controller
             $token = KeycloakWeb::getAccessToken($code);
 
             if (Auth::validate($token)) {
-                $url = config('laravel-keycloak.redirect_url', '/admin');
-                return redirect()->intended($url);
+                $url = App::config('laravel-keycloak.redirect_url', '/admin');
+                return Redirect::intended($url);
             }
         }
 
-        return redirect(route('keycloak.login'));
+        return Redirect::to(route('keycloak.login'));
     }
 }

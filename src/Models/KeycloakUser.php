@@ -2,8 +2,8 @@
 
 namespace TFSThiagoBR98\LaravelKeycloak\Models;
 
-use Auth;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Facades\Auth;
 
 class KeycloakUser implements Authenticatable
 {
