@@ -19,7 +19,7 @@ return new class extends Migration
             }
         } else {
             Schema::create('users', function (Blueprint $table) {
-                $table->uuid();
+                $table->uuid('id');
                 $table->string('name');
                 $table->string('email')->unique();
                 $table->schemalessAttributes('extra_attributes');

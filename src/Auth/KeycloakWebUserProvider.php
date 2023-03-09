@@ -32,9 +32,63 @@ class KeycloakWebUserProvider implements UserProvider
      */
     public function retrieveByCredentials(array $credentials)
     {
+        if (empty($credentials)) {
+            return;
+        }
+
+        $base = array_filter($credentials, function ($key) {
+            switch ($key) {
+                case 'name':
+                case 'email':
+                    return true;
+                default:
+                    return false;
+            }
+        }, ARRAY_FILTER_USE_KEY);
+        $base['extra_attributes'] = json_encode($credentials);
+
+        $query = $this->newModelQuery();
+
+        $inst = $query->where('email', $base['email'])->first();
+        if ($inst == null) {
+            $inst = $this->createModel();
+            $inst->saveQuietly($base);
+        } else {
+            $attrb = $inst->getAttributes();
+            $inst->updateQuietly($attrb);
+        }
+
+        return $inst;
+    }
+
+    /**
+     * Create a new instance of the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function createModel()
+    {
         $class = '\\'.ltrim($this->model, '\\');
 
-        return new $class($credentials);
+        return new $class;
+    }
+
+    /**
+     * Get a new query builder for the model instance.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model|null  $model
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function newModelQuery($model = null)
+    {
+        $query = is_null($model)
+                ? $this->createModel()->newQuery()
+                : $model->newQuery();
+
+        // Disable Events to avoid Infinite Loop
+        $query->getConnection()->unsetEventDispatcher();
+
+        return $query;
     }
 
     /**
