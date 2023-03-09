@@ -2,6 +2,7 @@
 
 namespace TFSThiagoBR98\LaravelKeycloak\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Spatie\SchemalessAttributes\Casts\SchemalessAttributes;
@@ -15,6 +16,8 @@ use Spatie\SchemalessAttributes\Casts\SchemalessAttributes;
  */
 class KeycloakUser implements Authenticatable
 {
+    use HasUlids;
+
     /**
      * Attributes we retrieve from Profile
      *

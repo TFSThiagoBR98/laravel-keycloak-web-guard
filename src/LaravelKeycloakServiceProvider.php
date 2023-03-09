@@ -37,7 +37,9 @@ class LaravelKeycloakServiceProvider extends ServiceProvider
 
         $this->publishes([$config => $this->app->configPath() . '/laravel-keycloak.php'], 'config');
 
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->publishes([
+            __DIR__.'/../database/migrations/' => database_path('migrations')
+        ], 'migrations');
 
         $this->mergeConfigFrom($config, 'laravel-keycloak');
 
