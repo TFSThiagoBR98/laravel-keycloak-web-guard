@@ -14,7 +14,7 @@ use Spatie\SchemalessAttributes\Casts\SchemalessAttributes;
  * @property string $name
  * @property \Spatie\SchemalessAttributes\SchemalessAttributes $extra_attributes
  */
-class KeycloakUser implements Authenticatable
+class KeycloakUser extends Authenticatable
 {
     use HasUlids;
 
