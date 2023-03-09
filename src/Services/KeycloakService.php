@@ -303,9 +303,9 @@ class KeycloakService
     /**
      * Get access token from Code
      * @param  array $credentials
-     * @return array
+     * @return array|null
      */
-    public function getUserProfile(array $credentials): array
+    public function getUserProfile(array $credentials): ?array
     {
         $credentials = $this->refreshTokenIfNeeded($credentials);
 
@@ -345,10 +345,10 @@ class KeycloakService
             $token->validateSub($user['sub'] ?? '');
         } catch (GuzzleException $e) {
             $this->logException($e);
-            throw $e;
+            return null;
         } catch (Exception $e) {
             Log::error('[Keycloak Service] ' . print_r($e->getMessage(), true));
-            throw $e;
+            return null;
         }
 
         return $user;

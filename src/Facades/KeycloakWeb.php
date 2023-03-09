@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string getLoginUrl()
  * @method static string getLogoutUrl()
  * @method static array getAccessToken(string $code)
- * @method static array getUserProfile(array $credentials)
+ * @method static array|null getUserProfile(array $credentials)
  * @method static void forgetToken()
  * @method static bool validateState(string|null $state)
  * 
