@@ -238,12 +238,12 @@ class KeycloakService
      * Refresh access token
      *
      * @param  string $refreshToken
-     * @return array
+     * @return array|null
      */
     public function refreshAccessToken($credentials)
     {
-        if (empty($credentials['refresh_token'])) {
-            return [];
+        if (empty($credentials) || empty($credentials['refresh_token'])) {
+            return null;
         }
 
         $url = $this->getOpenIdValue('token_endpoint');
@@ -269,6 +269,7 @@ class KeycloakService
             }
         } catch (GuzzleException $e) {
             $this->logException($e);
+            return null;
         }
 
         return $token;
@@ -310,6 +311,10 @@ class KeycloakService
     public function getUserProfile(array $credentials): ?array
     {
         $credentials = $this->refreshTokenIfNeeded($credentials);
+
+        if ($credentials == null) {
+            return null;
+        }
 
         $user = [];
         try {
@@ -556,7 +561,7 @@ class KeycloakService
      * Check we need to refresh token and refresh if needed
      *
      * @param  array<string,mixed> $credentials
-     * @return array<string,mixed>
+     * @return array<string,mixed>|null
      */
     protected function refreshTokenIfNeeded($credentials)
     {
@@ -573,7 +578,7 @@ class KeycloakService
 
         if (empty($credentials['access_token'])) {
             $this->forgetToken();
-            return [];
+            return null;
         }
 
         $this->saveToken($credentials);
