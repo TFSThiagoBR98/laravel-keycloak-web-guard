@@ -345,8 +345,10 @@ class KeycloakService
             $token->validateSub($user['sub'] ?? '');
         } catch (GuzzleException $e) {
             $this->logException($e);
+            throw $e;
         } catch (Exception $e) {
             Log::error('[Keycloak Service] ' . print_r($e->getMessage(), true));
+            throw $e;
         }
 
         return $user;
