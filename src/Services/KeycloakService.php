@@ -270,6 +270,9 @@ class KeycloakService
         } catch (GuzzleException $e) {
             $this->logException($e);
             return null;
+        } catch (Throwable $e) {
+            $this->logException($e);
+            return null;
         }
 
         return $token;
