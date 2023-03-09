@@ -2,6 +2,7 @@
 
 namespace TFSThiagoBR98\LaravelKeycloak\Auth\Guard;
 
+use BadMethodCallException;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;
@@ -105,13 +106,13 @@ class KeycloakWebGuard implements StatefulGuard
     /**
      * Validate a user's credentials.
      *
-     * @param  array  $credentials
+     * @param array<mixed,mixed> $credentials
      *
      * @throws BadMethodCallException
      *
      * @return bool
      */
-    public function validate(array $credentials = [])
+    public function validate(array $credentials = []): bool
     {
         if (empty($credentials['access_token']) || empty($credentials['id_token'])) {
             return false;
@@ -163,7 +164,7 @@ class KeycloakWebGuard implements StatefulGuard
      *
      * @param string $resource Default is empty: point to client_id
      *
-     * @return array
+     * @return array<string>
     */
     public function roles($resource = '')
     {
@@ -172,13 +173,13 @@ class KeycloakWebGuard implements StatefulGuard
         }
 
         if (! $this->check()) {
-            return false;
+            return [];
         }
 
         $token = KeycloakWeb::retrieveToken();
 
         if (empty($token) || empty($token['access_token'])) {
-            return false;
+            return [];
         }
 
         $token = new KeycloakAccessToken($token);
@@ -194,7 +195,7 @@ class KeycloakWebGuard implements StatefulGuard
     /**
      * Check user has a role
      *
-     * @param array|string $roles
+     * @param array<string>|string $roles
      * @param string $resource Default is empty: point to client_id
      *
      * @return boolean
@@ -207,8 +208,8 @@ class KeycloakWebGuard implements StatefulGuard
     /**
      * Attempt to authenticate a user using the given credentials.
      *
-     * @param  array  $credentials
-     * @param  bool  $remember
+     * @param  array<string,string> $credentials
+     * @param  bool $remember
      * @return bool
      */
     public function attempt(array $credentials = [], $remember = false) {
@@ -218,7 +219,7 @@ class KeycloakWebGuard implements StatefulGuard
     /**
      * Log a user into the application without sessions or cookies.
      *
-     * @param  array  $credentials
+     * @param  array<string,string>  $credentials
      * @return bool
      */
     public function once(array $credentials = []) {
@@ -233,7 +234,7 @@ class KeycloakWebGuard implements StatefulGuard
      * @return void
      */
     public function login(Authenticatable $user, $remember = false) {
-        return false;
+        return;
     }
 
     /**

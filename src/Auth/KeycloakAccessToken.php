@@ -29,7 +29,7 @@ class KeycloakAccessToken
     /**
      * Constructs an access token.
      *
-     * @param array $data The token from Keycloak as array.
+     * @param array<string,mixed> $data The token from Keycloak as array.
      */
     public function __construct($data = [])
     {
@@ -98,6 +98,8 @@ class KeycloakAccessToken
     /**
      * Check the ID Token
      *
+     * @param array<string,mixed> $claims
+     * 
      * @throws Exception
      * @return void
      */
@@ -178,8 +180,8 @@ class KeycloakAccessToken
     /**
      * Get token (access/refresh/id) data
      *
-     * @param string $token
-     * @return array
+     * @param string|null $token
+     * @return array<string,mixed>
      */
     protected function parseToken($token)
     {

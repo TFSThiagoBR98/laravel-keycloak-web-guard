@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use TFSThiagoBR98\LaravelKeycloak\Token;
 use Illuminate\Http\Request;
+use stdClass;
 use TFSThiagoBR98\LaravelKeycloak\Exceptions\ResourceAccessNotAllowedException;
 use TFSThiagoBR98\LaravelKeycloak\Exceptions\TokenException;
 use TFSThiagoBR98\LaravelKeycloak\Exceptions\UserNotFoundException;

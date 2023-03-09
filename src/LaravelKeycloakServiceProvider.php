@@ -18,7 +18,6 @@ use TFSThiagoBR98\LaravelKeycloak\Contracts\RegisterResponse;
 use TFSThiagoBR98\LaravelKeycloak\Middleware\KeycloakAuthenticated;
 use TFSThiagoBR98\LaravelKeycloak\Middleware\KeycloakCan;
 use TFSThiagoBR98\LaravelKeycloak\Middleware\KeycloakCanOne;
-use TFSThiagoBR98\LaravelKeycloak\Models\KeycloakUser;
 use TFSThiagoBR98\LaravelKeycloak\Responses\KeyCloakLoginResponse;
 use TFSThiagoBR98\LaravelKeycloak\Responses\KeyCloakLogoutResponse;
 use TFSThiagoBR98\LaravelKeycloak\Responses\KeyCloakRegisterResponse;
@@ -37,6 +36,9 @@ class LaravelKeycloakServiceProvider extends ServiceProvider
         $config = __DIR__ . '/../config/laravel-keycloak.php';
 
         $this->publishes([$config => $this->app->configPath() . '/laravel-keycloak.php'], 'config');
+
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+
         $this->mergeConfigFrom($config, 'laravel-keycloak');
 
         // User Provider

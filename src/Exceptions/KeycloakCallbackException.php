@@ -7,10 +7,7 @@ class KeycloakCallbackException extends \RuntimeException
     /**
      * Keycloak Callback Error
      *
-     * @param string|null     $message  [description]
-     * @param \Throwable|null $previous [description]
-     * @param array           $headers  [description]
-     * @param int|integer     $code     [description]
+     * @param string $error
      */
     public function __construct(string $error = '')
     {

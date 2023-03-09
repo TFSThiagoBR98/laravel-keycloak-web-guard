@@ -4,6 +4,7 @@ namespace TFSThiagoBR98\LaravelKeycloak;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use stdClass;
 
 class Token
 {
@@ -14,7 +15,7 @@ class Token
      * @param  string  $publicKey
      * @return stdClass|null
      */
-    public static function decode(string $token = null, string $publicKey, int $leeway = 0)
+    public static function decode(string $token = null, string $publicKey, int $leeway = 0): ?stdClass
     {
         JWT::$leeway = $leeway;
         $publicKey = self::buildPublicKey($publicKey);
@@ -28,7 +29,7 @@ class Token
      * @param  string  $key
      * @return string
      */
-    private static function buildPublicKey(string $key)
+    private static function buildPublicKey(string $key): string
     {
         return "-----BEGIN PUBLIC KEY-----\n".wordwrap($key, 64, "\n", true)."\n-----END PUBLIC KEY-----";
     }

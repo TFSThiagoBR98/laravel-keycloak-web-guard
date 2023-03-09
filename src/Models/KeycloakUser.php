@@ -2,9 +2,17 @@
 
 namespace TFSThiagoBR98\LaravelKeycloak\Models;
 
-use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
+use Spatie\SchemalessAttributes\Casts\SchemalessAttributes;
 
+/**
+ * Keycloak Base User
+ * 
+ * @property string $email
+ * @property string $name
+ * @property \Spatie\SchemalessAttributes\SchemalessAttributes $extra_attributes
+ */
 class KeycloakUser implements Authenticatable
 {
     /**
@@ -18,48 +26,13 @@ class KeycloakUser implements Authenticatable
     ];
 
     /**
-     * User attributes
+     * The attributes that should be cast.
      *
      * @var array
      */
-    protected $attributes = [];
-
-    /**
-     * Constructor
-     *
-     * @param array $profile Keycloak user info
-     */
-    public function __construct(array $profile)
-    {
-        foreach ($profile as $key => $value) {
-            if (in_array($key, $this->fillable)) {
-                $this->attributes[ $key ] = $value;
-            }
-        }
-
-        $this->id = $this->getKey();
-    }
-
-    /**
-     * Magic method to get attributes
-     *
-     * @param  string $name
-     * @return mixed
-     */
-    public function __get(string $name)
-    {
-        return $this->attributes[ $name ] ?? null;
-    }
-
-    /**
-     * Get the value of the model's primary key.
-     *
-     * @return mixed
-     */
-    public function getKey()
-    {
-        return $this->email;
-    }
+    protected $casts = [
+        'extra_attributes' => SchemalessAttributes::class,
+    ];
 
     /**
      * Get the name of the unique identifier for the user.

@@ -29,21 +29,21 @@ class KeycloakService
     /**
      * Keycloak URL
      *
-     * @var string
+     * @var string|null
      */
     protected $baseUrl;
 
     /**
      * Keycloak Realm
      *
-     * @var string
+     * @var string|null
      */
     protected $realm;
 
     /**
      * Keycloak Client ID
      *
-     * @var string
+     * @var string|null
      */
     protected $clientId;
 
@@ -276,9 +276,9 @@ class KeycloakService
      * Invalidate Refresh
      *
      * @param  string $refreshToken
-     * @return array
+     * @return bool
      */
-    public function invalidateRefreshToken($refreshToken)
+    public function invalidateRefreshToken($refreshToken): bool
     {
         $url = $this->getOpenIdValue('end_session_endpoint');
         $params = [
@@ -305,7 +305,7 @@ class KeycloakService
      * @param  array $credentials
      * @return array
      */
-    public function getUserProfile($credentials)
+    public function getUserProfile(array $credentials): array
     {
         $credentials = $this->refreshTokenIfNeeded($credentials);
 
@@ -387,7 +387,9 @@ class KeycloakService
     /**
      * Validate State from Session
      *
-     * @return void
+     * @param string|null $state
+     * 
+     * @return bool
      */
     public function validateState($state)
     {
@@ -501,7 +503,7 @@ class KeycloakService
     /**
      * Retrieve OpenId Endpoints
      *
-     * @return array
+     * @return array<string,mixed>
      */
     protected function getOpenIdConfiguration()
     {
@@ -546,8 +548,8 @@ class KeycloakService
     /**
      * Check we need to refresh token and refresh if needed
      *
-     * @param  array $credentials
-     * @return array
+     * @param  array<string,mixed> $credentials
+     * @return array<string,mixed>
      */
     protected function refreshTokenIfNeeded($credentials)
     {

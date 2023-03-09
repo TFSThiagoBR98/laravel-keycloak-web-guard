@@ -4,7 +4,6 @@ namespace TFSThiagoBR98\LaravelKeycloak\Auth;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
-use TFSThiagoBR98\LaravelKeycloak\Models\KeycloakUser;
 
 class KeycloakWebUserProvider implements UserProvider
 {
@@ -29,7 +28,7 @@ class KeycloakWebUserProvider implements UserProvider
      * Retrieve a user by the given credentials.
      *
      * @param  array  $credentials
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @return TFSThiagoBR98\LaravelKeycloak\Models\KeycloakUser|null
      */
     public function retrieveByCredentials(array $credentials)
     {
