@@ -4,6 +4,7 @@ namespace TFSThiagoBR98\LaravelKeycloak\Services;
 
 use Exception;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use TFSThiagoBR98\LaravelKeycloak\Auth\KeycloakAccessToken;
 use TFSThiagoBR98\LaravelKeycloak\Auth\Guard\KeycloakWebGuard;
+use Throwable;
 
 class KeycloakService
 {
@@ -346,7 +348,10 @@ class KeycloakService
         } catch (GuzzleException $e) {
             $this->logException($e);
             return null;
-        } catch (Exception $e) {
+        } catch (ClientException $e) {
+            $this->logException($e);
+            return null;
+        } catch (Throwable $e) {
             Log::error('[Keycloak Service] ' . print_r($e->getMessage(), true));
             return null;
         }
