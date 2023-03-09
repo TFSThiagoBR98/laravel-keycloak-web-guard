@@ -579,7 +579,7 @@ class KeycloakService
 
         $credentials = $this->refreshAccessToken($credentials);
 
-        if (empty($credentials['access_token'])) {
+        if (empty($credentials) || empty($credentials['access_token'])) {
             $this->forgetToken();
             return null;
         }
