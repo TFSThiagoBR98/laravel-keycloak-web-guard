@@ -49,13 +49,14 @@ class KeycloakWebUserProvider implements UserProvider
 
         $query = $this->newModelQuery();
 
+        /** @var \TFSThiagoBR98\LaravelKeycloak\Models\KeycloakUser|null  */
         $inst = $query->where('email', $base['email'])->first();
         if ($inst == null) {
             $inst = $this->createModel();
-            $inst->saveQuietly($base);
+            $inst->fill($base);
+            $inst->saveQuietly();
         } else {
-            $attrb = $inst->getAttributes();
-            $inst->updateQuietly($attrb);
+            $inst->updateQuietly($base);
         }
 
         return $inst;
@@ -70,7 +71,7 @@ class KeycloakWebUserProvider implements UserProvider
     {
         $class = '\\'.ltrim($this->model, '\\');
 
-        return new $class;
+        return new $class();
     }
 
     /**
