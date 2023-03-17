@@ -106,15 +106,15 @@ class KeycloakWebGuard implements StatefulGuard
     /**
      * Validate a user's credentials.
      *
-     * @param array<mixed,mixed> $credentials
+     * @param array<mixed,mixed>|null $credentials
      *
      * @throws BadMethodCallException
      *
      * @return bool
      */
-    public function validate(array $credentials = []): bool
+    public function validate(?array $credentials = []): bool
     {
-        if (empty($credentials['access_token']) || empty($credentials['id_token'])) {
+        if ($credentials == null || empty($credentials['access_token']) || empty($credentials['id_token'])) {
             return false;
         }
 
