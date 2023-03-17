@@ -147,7 +147,7 @@ class KeycloakService
      *
      * @return string
      */
-    public function getLoginUrl()
+    public function getLoginUrl(): string
     {
         $url = $this->getOpenIdValue('authorization_endpoint');
         $params = [
@@ -166,7 +166,7 @@ class KeycloakService
      *
      * @return string
      */
-    public function getLogoutUrl()
+    public function getLogoutUrl(): string
     {
         $url = $this->getOpenIdValue('end_session_endpoint');
 
@@ -193,7 +193,7 @@ class KeycloakService
      *
      * @return string
      */
-    public function getRegisterUrl()
+    public function getRegisterUrl(): string
     {
         $url = $this->getLoginUrl();
         return str_replace('/auth?', '/registrations?', $url);
@@ -202,9 +202,9 @@ class KeycloakService
      * Get access token from Code
      *
      * @param  string $code
-     * @return array
+     * @return array|null
      */
-    public function getAccessToken($code)
+    public function getAccessToken($code): ?array
     {
         $url = $this->getOpenIdValue('token_endpoint');
         $params = [
@@ -218,8 +218,6 @@ class KeycloakService
             $params['client_secret'] = $this->clientSecret;
         }
 
-        $token = [];
-
         try {
             $response = $this->httpClient->request('POST', $url, ['form_params' => $params]);
 
@@ -228,7 +226,7 @@ class KeycloakService
                 $token = json_decode($token, true);
             }
         } catch (GuzzleException $e) {
-            $this->logException($e);
+            return null;
         }
 
         return $token;
@@ -268,10 +266,8 @@ class KeycloakService
                 $token = json_decode($token, true);
             }
         } catch (GuzzleException $e) {
-            $this->logException($e);
             return null;
         } catch (Throwable $e) {
-            $this->logException($e);
             return null;
         }
 
@@ -300,10 +296,8 @@ class KeycloakService
             $response = $this->httpClient->request('POST', $url, ['form_params' => $params]);
             return $response->getStatusCode() === 204;
         } catch (GuzzleException $e) {
-            $this->logException($e);
+            return false;
         }
-
-        return false;
     }
 
     /**
@@ -354,13 +348,10 @@ class KeycloakService
             // Validate retrieved user is owner of token
             $token->validateSub($user['sub'] ?? '');
         } catch (GuzzleException $e) {
-            $this->logException($e);
             return null;
         } catch (ClientException $e) {
-            $this->logException($e);
             return null;
         } catch (Throwable $e) {
-            Log::error('[Keycloak Service] ' . print_r($e->getMessage(), true));
             return null;
         }
 
@@ -372,7 +363,7 @@ class KeycloakService
      *
      * @return array|null
      */
-    public function retrieveToken()
+    public function retrieveToken(): ?array
     {
         return Session::get(self::KEYCLOAK_SESSION);
     }
@@ -547,8 +538,6 @@ class KeycloakService
                 $configuration = json_decode($configuration, true);
             }
         } catch (GuzzleException $e) {
-            $this->logException($e);
-
             throw new Exception('[Keycloak Error] It was not possible to load OpenId configuration: ' . $e->getMessage());
         }
 
@@ -586,28 +575,6 @@ class KeycloakService
 
         $this->saveToken($credentials);
         return $credentials;
-    }
-
-    /**
-     * Log a GuzzleException
-     *
-     * @param  GuzzleException $e
-     * @return void
-     */
-    protected function logException(GuzzleException $e)
-    {
-        // Guzzle 7
-        if (! method_exists($e, 'getResponse') || empty($e->getResponse())) {
-            Log::error('[Keycloak Service] ' . $e->getMessage());
-            return;
-        }
-
-        $error = [
-            'request' => method_exists($e, 'getRequest') ? $e->getRequest() : '',
-            'response' => $e->getResponse()->getBody()->getContents(),
-        ];
-
-        Log::error('[Keycloak Service] ' . print_r($error, true));
     }
 
     /**
