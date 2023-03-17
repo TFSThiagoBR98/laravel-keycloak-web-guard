@@ -66,7 +66,7 @@ class KeycloakUser extends Authenticatable
      * @param  string  $resource
      * @return boolean
      */
-    public function hasRole($roles, $resource = '')
+    public function hasKeycloakRole($roles, $resource = '')
     {
         return Auth::hasRole($roles, $resource);
     }
